@@ -301,9 +301,10 @@ def dlqe(*args, **kwargs):
     _check_shape("QN", QN, G.shape[1], G.shape[1])
 
     # Compute the result (dimension and symmetry checking done in dare())
-    P, E, LT = dare(A.T, C.T, G @ QN @ G.T, RN, method=method,
+    P, E, _ = dare(A.T, C.T, G @ QN @ G.T, RN, method=method,
                     B_s="C", Q_s="QN", R_s="RN", S_s="NN")
-    return _ssmatrix(LT.T), _ssmatrix(P), E
+    L = P @ C.T @ np.linalg.inv(C @ P @ C.T + RN)
+    return _ssmatrix(L), _ssmatrix(P), E
 
 
 # Function to create an estimator
